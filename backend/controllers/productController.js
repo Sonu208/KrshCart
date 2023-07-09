@@ -1,46 +1,52 @@
-const Product = require("../models/productModels")
-
+const Product = require("../models/productModels");
+const ErrorHandler = require("../utills/errorhandler");
+const catchAsyncErrors = require("../middleware/catchAsyncErrors");
+const ApiFeatures = require("../utills/apifeatures");
 
 //create product --ADMIN
-exports.createProduct=async(req,res,next)=>{
+exports.createProduct=catchAsyncErrors(async(req,res,next)=>{
     const product =await Product.create(req.body);
 
     res.status(201).json({
         success:true,
         product
-    })
-}
+    });
+});
 
 //GET ALL PRODUCTS
-exports.getAllProducts = async(req,res)=>{
+exports.getAllProducts = catchAsyncErrors(async(req,res)=>{
 
-    const products=await Product.find();
+const resultPerPage=8;
+const productsCount = await Product.countDocuments();
+const apiFeature = new ApiFeatures(Product.find(),req.query).
+search().
+filter().pagination(resultPerPage);
+    const products=await apiFeature.query;
 
     res.status(200).json({
         success:true,
         products
-    })
-}
+    });
+});
 
 // Get Product Details
-exports.getProductDetails = async (req, res, next) => {
+exports.getProductDetails = catchAsyncErrors(async (req, res, next) => {
     const product = await Product.findById(req.params.id);
   
     if (!product) {
-    return res.status(200).json({
-      success: false,
-      message:"Product not found"
+      return next(new ErrorHandler("Product not found", 404));
+    }
+  
+    res.status(200).json({
+      success: true,
+      product,
+      productCount,
     });
-}
-
-res.status(200).json({
-    success: true,
-    product
-})}
+  });
 
 //Update product--ADMIN
 
-exports.updateProduct=async(req,res,next)=>{
+exports.updateProduct=catchAsyncErrors(async(req,res,next)=>{
     let product =await Product.findById(req.params.id);
 
     if(!product){
@@ -58,8 +64,8 @@ exports.updateProduct=async(req,res,next)=>{
       res.status(200).json({
         success: true,
         product
-})
-}
+});
+});
 
 //Delete Product 
 
