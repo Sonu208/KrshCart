@@ -6,6 +6,7 @@ import React from "react";
 import Footer from "./component/layout/Footer/Footer";
 import Home from "./component/Home/Home";
 
+
 function App() {
   React.useEffect(() => {
     WebFont.load({
