@@ -68,7 +68,7 @@ userSchema.methods.comparePassword = async function (password) {
 };
 
 // Generating Password Reset Token
-userSchema.methods.getResetPasswordToken = function () {
+userSchema.methods.getResetPasswordToken = function (newExpirationTimeInMinutes) {
   // Generating Token
   const resetToken = crypto.randomBytes(20).toString("hex");
 
@@ -78,7 +78,7 @@ userSchema.methods.getResetPasswordToken = function () {
     .update(resetToken)
     .digest("hex");
 
-  this.resetPasswordExpire = Date.now() + 15 * 60 * 1000;
+  this.resetPasswordExpire = Date.now() + newExpirationTimeInMinutes * 60 * 1000; // Set the token expiry to the new expiration time
 
   return resetToken;
 };
