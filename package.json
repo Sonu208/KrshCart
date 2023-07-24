@@ -21,6 +21,7 @@
     "mongoose": "^7.3.1",
     "nodemailer": "^6.9.3",
     "nodemon": "^2.0.22",
+    "react-icons": "^4.10.1",
     "validator": "^13.9.0"
   }
 }
